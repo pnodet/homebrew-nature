@@ -1,0 +1,57 @@
+{
+  "pnodet/nature/nature": {
+    "formula": {
+      "name": "nature",
+      "pkg_version": "0.5.0",
+      "path": "Library/Taps/pnodet/homebrew-nature/Formula/nature.rb",
+      "tap_git_path": "Formula/nature.rb",
+      "tap_git_revision": "7724fc3fe29acf80a9069530a582c4405fa8db27",
+      "tap_git_remote": null,
+      "desc": "Modern systems programming language",
+      "license": "Apache-2.0",
+      "homepage": "https://nature-lang.org"
+    },
+    "bottle": {
+      "root_url": "https://ghcr.io/v2/homebrew/core",
+      "cellar": "any_skip_relocation",
+      "rebuild": 0,
+      "date": "2025-06-02T22:36:12Z",
+      "tags": {
+        "arm64_sequoia": {
+          "filename": "nature-0.5.0.arm64_sequoia.bottle.tar.gz",
+          "local_filename": "nature--0.5.0.arm64_sequoia.bottle.tar.gz",
+          "sha256": "a93427161ed8e87ca45891efa70b23147e53f3a4c30c501dc5f741109f62e81f",
+          "tab": {
+            "homebrew_version": "4.5.4-2-gd914a72",
+            "changed_files": [],
+            "source_modified_time": 1745510038,
+            "compiler": "clang",
+            "runtime_dependencies": [],
+            "arch": "arm64",
+            "built_on": {
+              "os": "Macintosh",
+              "os_version": "macOS 15",
+              "cpu_family": "arm_brava",
+              "xcode": "16.2",
+              "clt": "16.4.0.0.1.1747106510",
+              "preferred_perl": "5.34"
+            }
+          },
+          "path_exec_files": [
+            "bin/nature"
+          ],
+          "all_files": [
+            ".brew/nature.rb",
+            "INSTALL_RECEIPT.json",
+            "LICENSE-APACHE",
+            "LICENSE-MIT",
+            "README.md",
+            "bin/nature",
+            "sbom.spdx.json"
+          ],
+          "installed_size": 800971
+        }
+      }
+    }
+  }
+}
