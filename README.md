@@ -1,16 +1,16 @@
-# Pnodet Nature
+# Tap for Nature Lang
 
 ## How do I install these formulae?
 
-`brew install pnodet/nature/<formula>`
+`brew install pnodet/nature/nature`
 
-Or `brew tap pnodet/nature` and then `brew install <formula>`.
+Or `brew tap pnodet/nature` and then `brew install nature`.
 
 Or, in a `brew bundle` `Brewfile`:
 
 ```ruby
 tap "pnodet/nature"
-brew "<formula>"
+brew "nature"
 ```
 
 ## Documentation
