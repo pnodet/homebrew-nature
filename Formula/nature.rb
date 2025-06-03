@@ -17,7 +17,7 @@ class Nature < Formula
 
     Dir.chdir(source_dir) do
       # Install binaries
-      bin.install "bin/nature"
+      bin.install "bin/nature" => "nature-bin"
       bin.install "bin/nls" if File.exist?("bin/nls")
       bin.install "bin/npkg" if File.exist?("bin/npkg")
 
@@ -29,29 +29,44 @@ class Nature < Formula
       doc.install "LICENSE-APACHE", "LICENSE-MIT"
       lib.install "VERSION" if File.exist?("VERSION")
     end
+
+    # Create a wrapper script that sets up the environment properly
+    (bin/"nature").write <<~EOS
+      #!/bin/bash
+      export NATURE_ROOT="#{lib}"
+      exec "#{bin}/nature-bin" "$@"
+    EOS
+    chmod 0755, bin/"nature"
   end
 
-  def caveats
+    def caveats
     <<~EOS
       Nature has been installed successfully.
 
-      You need to set the NATURE_ROOT environment variable to:
-        export NATURE_ROOT=#{lib}
-
-      To set this permanently in your shell:
-        echo 'export NATURE_ROOT=#{lib}' >> ~/.zshrc
-
-      Then you can use nature with:
+      The NATURE_ROOT environment variable is automatically set by the wrapper.
+      You can now use nature directly with:
         nature build main.n
+
+      IMPORTANT - LINKER CONFIGURATION:
+      If you have Anaconda or other development environments installed, you may
+      encounter linker errors. In this case, specify the system linker explicitly:
+        nature build --ld /usr/bin/ld main.n
+
+      For projects requiring specific frameworks (like raylib):
+        nature build --ld /usr/bin/ld --ldflags '-framework IOKit -framework Cocoa' main.n
 
       The standard library is located at:
         #{lib}/std
+
+      MANUAL CONFIGURATION (if needed):
+      If you prefer to set the environment manually:
+        export NATURE_ROOT=#{lib}
+        #{bin}/nature-bin build main.n
     EOS
   end
 
   test do
-    # Set NATURE_ROOT for the test
-    ENV["NATURE_ROOT"] = lib.to_s
+    # Test the wrapper script
     system bin/"nature", "--version"
   end
 end
