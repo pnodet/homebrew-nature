@@ -1,30 +1,57 @@
 class Nature < Formula
   desc "Modern systems programming language"
   homepage "https://nature-lang.org"
-  url "https://github.com/nature-lang/nature/archive/refs/tags/v0.5.0.tar.gz"
-  sha256 "9d8350f8b50dfe0823b034e36d1b797d64929541c6818ca1dae9a9d110b375ca"
   license "Apache-2.0"
 
-  depends_on "cmake" => :build
-  depends_on "go" => :build
-  depends_on "ninja" => :build
-  uses_from_macos "zlib"
+  if Hardware::CPU.arm?
+    url "https://github.com/nature-lang/nature/releases/download/v0.5.0/nature-v0.5.0-darwin-arm64.tar.gz"
+    sha256 "923b56ee44ce66e4c328142107f4ca9fb96755317c35baa44e5a05080206c9a3"
+  else
+    url "https://github.com/nature-lang/nature/releases/download/v0.5.0/nature-v0.5.0-darwin-amd64.tar.gz"
+    sha256 "8558042c46bbe20245c094a413c4c2929af7fdb0fef816e3cae259aeaafdafe4"
+  end
 
   def install
-    system "cmake", "-S", ".", "-B", "build", "-DCMAKE_BUILD_TYPE=Release",
-           "-DNATURE_BUILD_TESTS=OFF", *std_cmake_args
-    system "cmake", "--build", "build", "--target", "nature"
+    # Check if we have a nature subdirectory or if files are in the root
+    source_dir = Dir.exist?("nature") ? "nature" : "."
 
-    if File.exist?("build/nature")
-      bin.install "build/nature"
-    elsif File.exist?("build/bin/nature")
-      bin.install "build/bin/nature"
-    else
-      odie "Could not find nature binary after build"
+    Dir.chdir(source_dir) do
+      # Install binaries
+      bin.install "bin/nature"
+      bin.install "bin/nls" if File.exist?("bin/nls")
+      bin.install "bin/npkg" if File.exist?("bin/npkg")
+
+      # Install standard library and lib directory
+      lib.install "std"
+      lib.install "lib"
+
+      # Install license and version files
+      doc.install "LICENSE-APACHE", "LICENSE-MIT"
+      lib.install "VERSION" if File.exist?("VERSION")
     end
   end
 
+  def caveats
+    <<~EOS
+      Nature has been installed successfully.
+
+      You need to set the NATURE_ROOT environment variable to:
+        export NATURE_ROOT=#{lib}
+
+      To set this permanently in your shell:
+        echo 'export NATURE_ROOT=#{lib}' >> ~/.zshrc
+
+      Then you can use nature with:
+        nature build main.n
+
+      The standard library is located at:
+        #{lib}/std
+    EOS
+  end
+
   test do
+    # Set NATURE_ROOT for the test
+    ENV["NATURE_ROOT"] = lib.to_s
     system bin/"nature", "--version"
   end
 end
