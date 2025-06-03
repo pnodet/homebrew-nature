@@ -39,7 +39,7 @@ class Nature < Formula
     chmod 0755, bin/"nature"
   end
 
-    def caveats
+  def caveats
     <<~EOS
       Nature has been installed successfully.
 
